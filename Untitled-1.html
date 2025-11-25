@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Інтерактивний Регламент Сервісу</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        /* Базовий адаптивний контейнер для Chart.js */
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            /* Трюк для співвідношення сторін 5:3 на десктопі */
+            padding-bottom: 60%; 
+            height: 0;
+            overflow: hidden;
+        }
+        .chart-wrapper canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100% !important;
+            height: 100% !important;
+        }
+        
+        /* ✅ ВИПРАВЛЕННЯ: Додаємо fallback-висоту для маленьких екранів (мобільні) */
+        @media (max-width: 640px) {
+            .chart-wrapper {
+                /* Примусово встановлюємо висоту 300px на мобільному */
+                height: 300px; 
+                padding-bottom: 0; /* Вимикаємо padding-bottom, щоб не було конфлікту */
+            }
+        }
+    </style>
+    
+</head>
+<body class="bg-gray-100 text-gray-900">
+
+    <div class="container mx-auto max-w-7xl p-4 sm:p-6 lg:p-8">
+        
+        <header class="mb-10">
+            <h1 class="text-4xl font-bold text-blue-900 text-center">Візуальний Регламент</h1>
+            <p class="text-xl text-gray-700 text-center">Інтерактивний регламент сервісного обслуговування</p>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+            <div class="lg:col-span-2 bg-white rounded-xl shadow-lg p-6">
+                <h2 class="text-2xl font-semibold text-blue-900 mb-4">1. Ліміти Сервісних Виїздів</h2>
+                <p class="text-gray-700 mb-6 text-sm sm:text-base">
+                    Ця діаграма візуалізує максимальну кількість рекламацій, яку можна обробити за один виїзд, залежно від його типу. 
+                    Виїзди з доставкою мають менший ліміт через обмежений час та місце в авто.
+                    Всі виїзди плануються за єдиним стандартом. 
+                    Ключова відмінність раз на 2-3 місяці ораганізація виїзду без доставки .
+                </p>
+                <div class="chart-wrapper">
+                    <canvas id="tripLimitsChart"></canvas>
+                </div>
+            </div>
+
+            <div class="lg:col-span-1 bg-white rounded-xl shadow-lg p-6">
+                <h2 class="text-2xl font-semibold text-blue-900 mb-4">2. Управління Процесом</h2>
+                <p class="text-gray-700 mb-6 text-sm sm:text-base">
+                    Ключові процедури, що забезпечують ефективність роботи відділу.
+                </p>
+                
+                <div class="space-y-6">
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-800">Оперативні наради</h3>
+                        <p class="text-gray-600 text-sm sm:text-base">Проводяться за необхідністю для вирішення нових питань.</p>
+                        <ul class="mt-2 space-y-1">
+                            
+                           <li class="flex items-start">
+                            <span class="font-semibold w-48 text-sm sm:text-base">Графік:</span>
+                            <ul class="ml-2 text-sm sm:text-base">
+                                <li>Вівторок</li>
+                                <li>Четвер (тільки за наявності нових або складних питань)</li>
+                            </ul>
+                        </li>
+
+                    </div><li class="flex items-start text-sm sm:text-base">
+                        <span class="font-semibold w-56">Обов’язкова присутність на нараді:</span>
+                        <ul class="ml-2">
+                            <li>Керівник виробництва;</li>
+                            <li>Керівник відділу продажів</li>
+                            <li>Бригадири</li>
+                        </ul>
+                    </li
+                    
+                    <hr>
+
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-800">Облік Фурнітури</h3>
+                        <p class="text-gray-600 text-sm sm:text-base">Стандартна процедура списання гарантійних комплектуючих.</p>
+                        <ul class="mt-2 space-y-1 text-sm sm:text-base">
+                            <li class="flex items-center"><span class="font-semibold w-24">Рішення:</span> <span class="text-blue-700 font-bold">Видача за 0,01 грн</span></li>
+                            <li class="flex items-center"><span class="font-semibold w-24">Причина:</span> <span>Уникнення "завислої" дебіторки.</span></li>
+                            <li class="flex items-center"><span class="font-semibold w-24">Результат:</span> <span>Вартість одразу списується на "Сервісні витрати".</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lg:col-span-3 bg-white rounded-xl shadow-lg p-6">
+                <h2 class="text-2xl font-semibold text-blue-900 mb-4">3. Матриця Технічних Рішень</h2>
+                <p class="text-gray-700 mb-6 text-sm sm:text-base">
+                    Оберіть тип проблеми, щоб миттєво побачити затверджене стандартне рішення. 
+                    Це пришвидшує обробку рекламацій та стандартизує підхід.
+                </p>
+                
+                <div class="flex flex-wrap gap-3 mb-6">
+                    <button id="btn-nerzh" class="decision-btn flex-1 bg-blue-600 text-white px-5 py-3 rounded-lg font-semibold shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 text-sm sm:text-base" data-target="content-nerzh">
+                        Нержавійка
+                    </button>
+                    <button id="btn-polymer" class="decision-btn flex-1 bg-gray-200 text-gray-800 px-5 py-3 rounded-lg font-semibold hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 text-sm sm:text-base" data-target="content-polymer">
+                        Полімер (Повтор)
+                    </button>
+                    <button id="btn-furn" class="decision-btn flex-1 bg-gray-200 text-gray-800 px-5 py-3 rounded-lg font-semibold hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 text-sm sm:text-base" data-target="content-furn">
+                        Фурнітура
+                    </button>
+                </div>
+
+                <div id="decision-content-wrapper" class="bg-gray-50 rounded-lg p-6 border text-sm sm:text-base">
+                    <div id="content-nerzh" class="decision-content space-y-3">
+                        <h3 class="text-xl font-bold text-gray-800">Проблема: Нержавійка</h3>
+                        <p><span class="font-semibold text-gray-600 w-full inline-block sm:w-32 sm:inline-block">Причина:</span> Відстрелює нержавійка внаслідок усадки полімеру і тд.</p>
+                        <p class="border-t pt-3 mt-3"><span class="font-semibold text-blue-800 w-full inline-block sm:w-32 sm:inline-block">Рішення:</span> <strong class="text-blue-800">Тільки замовлення НОВОЇ накладки.</strong> (Заборонено гнути чи різати стару на місці).</p>
+                    </div>
+                    
+                    <div id="content-polymer" class="decision-content space-y-3 hidden">
+                        <h3 class="text-xl font-bold text-gray-800">Проблема: Полімер (Повторне звернення)</h3>
+                        <p><span class="font-semibold text-gray-600 w-full inline-block sm:w-32 sm:inline-block">Причина:</span> Рецидив проблеми (здуття, тріщини).</p>
+                        <p class="border-t pt-3 mt-3"><span class="font-semibold text-blue-800 w-full inline-block sm:w-32 sm:inline-block">Рішення:</span> <strong class="text-blue-800">Заміна технології.</strong> (Перехід на "Ламбре" або інший стабільний аналог).</p>
+                    </div>
+
+                    <div id="content-furn" class="decision-content space-y-3 hidden">
+                        <h3 class="text-xl font-bold text-gray-800">Проблема: Фурнітура</h3>
+                        <p><span class="font-semibold text-gray-600 w-full inline-block sm:w-32 sm:inline-block">Причина:</span> Поломка або заводський брак.</p>
+                        <p class="border-t pt-3 mt-3"><span class="font-semibold text-blue-800 w-full inline-block sm:w-32 sm:inline-block">Рішення:</span> <strong class="text-blue-800">Заміна (зі списанням 0,01 грн).</strong> (Вартість покривається "Сервісними витратами").</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lg:col-span-3 bg-white rounded-xl shadow-lg p-6">
+                <h2 class="text-2xl font-semibold text-blue-900 mb-4">4. Політика для Партнерів ("КЛУБ ДВЕРЕЙ")</h2>
+                <p class="text-red-700 mb-6 text-sm sm:text-base">
+                    Необхідність ввести критично важливе правило гарантії  
+                    <h2 class="text-2xl font-semibold text-red-900 mb-4">Відсутність захисного козирка на вуличних дверях автоматично 
+                    анулює гарантійні зобов'язання щодо пошкодження покриття" </h2>
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="border-4 border-green-600 bg-green-50 rounded-lg p-6 text-center">
+                        <span class="text-5xl" role="img" aria-label="check mark">✅</span>
+                        <h3 class="text-2xl font-bold text-green-800 my-3">ГАРАНТІЯ ДІЄ</h3>
+                        <p class="text-green-700 text-sm sm:text-base">На об'єкті встановлено захисний козирок, що захищає двері від опадів та УФ-променів.</p>
+                    </div>
+                    <div class="border-4 border-red-600 bg-red-50 rounded-lg p-6 text-center">
+                        <span class="text-5xl" role="img" aria-label="cross mark">❌</span>
+                        <h3 class="text-2xl font-bold text-red-800 my-3">ГАРАНTІЯ НЕ ДІЄ</h3>
+                        <p class="text-red-700 text-sm sm:text-base">Відсутній козирок. Рекламації по здуттю, вигоранню чи корозії покриття <strong class="uppercase">не приймаються</strong>.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lg:col-span-3 bg-white rounded-xl shadow-lg p-6">
+                <h2 class="text-2xl font-semibold text-blue-900 mb-4">5. Чек-Ліст Підготовки до Виїзду</h2>
+                <p class="text-gray-700 mb-6 text-sm sm:text-base">
+                    Виїзд вважається підготовленим лише після виконання всіх 4-х пунктів.
+                </p>
+                <ol class="list-none space-y-4 text-sm sm:text-base">
+                    <li class="flex items-start p-4 bg-gray-50 rounded-lg">
+                        <span class="text-2xl font-bold text-blue-600 mr-4">1.</span>
+                        <span class="text-gray-800">Список адрес сформовано (від 4 до 8 точок залежно від типу завантаження)-відповідальний менеджер по реклмаціям.</span>
+                    </li>
+                    <li class="flex items-start p-4 bg-gray-50 rounded-lg">
+                        <span class="text-2xl font-bold text-blue-600 mr-4">2.</span>
+                        <span class="text-gray-800">Комплектація перевірена (наявність необхідної фурнітури, накладок тощо)-відповідальний керівник виробництва.</span>
+                    </li>
+                    <li class="flex items-start p-4 bg-gray-50 rounded-lg">
+                        <span class="text-2xl font-bold text-blue-600 mr-4">3.</span>
+                        <span class="text-gray-800">Клієнти попереджені про візит (за 48 години)-відповідальний менеджер по реклмаціям.</span>
+                    </li>
+                    <li class="flex items-start p-4 bg-gray-50 rounded-lg">
+                        <span class="text-2xl font-bold text-blue-600 mr-4">4.</span>
+                        <span class="text-gray-800">Маршрутний лист сформований та затверджений-відповідальний логіст/менеджер по реклмаціям.</span>
+                    </li>
+                </ol>
+            </div>
+
+        </div>
+
+        <footer class="text-center mt-12 py-6 border-t border-gray-200">
+            <p class="text-sm text-gray-500">Регламент Сервісного Відділу | 2025-2026</p>
+        </footer>
+
+    </div>
+
+    <script>
+        (function() {
+            
+            const tooltipTitleCallback = function(tooltipItems) {
+                const item = tooltipItems[0];
+                let label = item.chart.data.labels[item.dataIndex];
+                if (Array.isArray(label)) {
+                    return label.join(' ');
+                } else {
+                    return label;
+                }
+            };
+
+            const tripCtx = document.getElementById('tripLimitsChart').getContext('2d');
+            new Chart(tripCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Виїзд + Доставка', 'Тільки Сервіс (без доставки)'],
+                    datasets: [{
+                        label: 'Макс. рекламацій за виїзд',
+                        data: [4, 8],
+                        backgroundColor: [
+                            'rgba(249, 115, 22, 0.7)', 
+                            'rgba(30, 64, 175, 0.7)'  
+                        ],
+                        borderColor: [
+                            'rgba(59, 130, 246, 1)',
+                            'rgba(30, 64, 175, 1)'
+                        ],
+                        borderWidth: 1,
+                        borderRadius: 4,
+                        barPercentage: 0.6,
+                        categoryPercentage: 0.7
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    /* Встановлюємо maintainAspectRatio в false для використання CSS aspect ratio */
+                    maintainAspectRatio: false, 
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 2,
+                                color: '#1f2937'
+                            },
+                            grid: {
+                                color: '#e5e7eb'
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                color: '#1f2937'
+                            },
+                            grid: {
+                                display: false
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                title: tooltipTitleCallback
+                            }
+                        }
+                    }
+                }
+            });
+
+            const decisionBtns = document.querySelectorAll('.decision-btn');
+            const decisionContents = document.querySelectorAll('.decision-content');
+
+            decisionBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const targetId = btn.getAttribute('data-target');
+                    
+                    decisionContents.forEach(content => {
+                        if (content.id === targetId) {
+                            content.classList.remove('hidden');
+                        } else {
+                            content.classList.add('hidden');
+                        }
+                    });
+
+                    decisionBtns.forEach(b => {
+                        b.classList.remove('bg-blue-600', 'text-white');
+                        b.classList.add('bg-gray-200', 'text-gray-800');
+                    });
+                    
+                    btn.classList.add('bg-blue-600', 'text-white');
+                    btn.classList.remove('bg-gray-200', 'text-gray-800');
+                });
+            });
+
+        })();
+    </script>
+
+</body>
+</html>
